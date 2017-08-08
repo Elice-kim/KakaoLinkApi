@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         KakaoLink.addKakaoLink(this, "디저트사진",
                 "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg"
-        , "https://developers.kakao.com", "아메리카노, 빵, 케익", "웹에서 보기", "앱에서 보기" ,10 , 20, 30);
+        , "https://developers.kakao.com", "아메리카노, 빵, 케익",
+                "웹에서 보기", "앱에서 보기" ,10 , 20, 30, 40);
     }
 }
