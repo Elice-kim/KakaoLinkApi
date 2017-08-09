@@ -7,6 +7,7 @@ import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import elice.me.mykakako.com.vingle.framework.wrapper.Data;
 import elice.me.mykakako.com.vingle.framework.wrapper.KakaoLink;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,9 +26,16 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.shareBtn)
     void shareBtnClicked(){
 
-        KakaoLink.addKakaoLink(this, "디저트사진",
-                "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg"
-        , "https://developers.kakao.com", "아메리카노, 빵, 케익",
-                "웹에서 보기", "앱에서 보기" ,10 , 20, 30, 40);
+        Data data = new Data();
+        data.setButtonTextApp("앱에서 보기");
+        data.setButtonTextWeb("웹에서 보기");
+        data.setTitle("디저트 사진");
+        data.setText("아메아메");
+        data.setImageUrl("");
+        data.setWebUrl("https://developers.kakao.com");
+
+        KakaoLink.addKakaoLink(this, data);
+
+
     }
 }

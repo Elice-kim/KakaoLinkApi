@@ -15,4 +15,29 @@ public class Data {
     public int commentCount;
     public int sharedCount;
     public int viewCount;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setButtonTextWeb(String buttonTextWeb) {
+        this.buttonTextWeb = buttonTextWeb;
+    }
+
+    public void setButtonTextApp(String buttonTextApp) {
+        this.buttonTextApp = buttonTextApp;
+    }
+
 }

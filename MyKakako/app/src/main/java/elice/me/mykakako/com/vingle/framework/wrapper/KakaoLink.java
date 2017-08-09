@@ -18,41 +18,26 @@ import com.kakao.util.helper.log.Logger;
  */
 
 public class KakaoLink {
-//
-//    private FeedTemplate mParams;
-//
-//    private KakaoLink(FeedTemplate mParams) {
-//        this.mParams = mParams;
-//    }
 
-    //todo web url 연결만 다시 해보기
+    private FeedTemplate mParams;
+
+    private KakaoLink(FeedTemplate params) {
+        mParams = params;
+    }
     public static void addKakaoLink(Context context, Data data) {
-        FeedTemplate params =
-                FeedTemplate.newBuilder(
-                        ContentObject.newBuilder(data.title, data.imageUrl, LinkObject.newBuilder()
-                                .setWebUrl(data.webUrl)
-                                .setMobileWebUrl(data.webUrl)
-                                .build())
-                                .setDescrption(data.text)
-                                .build())
-                        .setSocial(SocialObject.newBuilder()
-                                .setLikeCount(data.likeCount)
-                                .setCommentCount(data.commentCount)
-                                .setSharedCount(data.sharedCount)
-                                .setViewCount(data.viewCount)
-                                .build())
-                        .addButton(new ButtonObject(data.buttonTextWeb,
-                                LinkObject.newBuilder()
-                                        .setWebUrl(data.webUrl)
-                                        .build()))
-                        .addButton(new ButtonObject(data.buttonTextApp,
-                                LinkObject.newBuilder()
-                                        .setWebUrl(data.webUrl)
-                                        .build()))
-                        .build();
 
+        KakaoLink link = new Builder(context)
+                .addText(data.text)
+                .addImage(data.imageUrl, 0, 0)
+                .addAppButton(data.buttonTextApp, "key1=value1")
+                .addWebLink(data.buttonTextWeb, data.webUrl)
+                .build();
+        link.send(context);
+    }
+
+    public void send(Context context) {
         KakaoLinkService.getInstance()
-                .sendDefault(context, params, new ResponseCallback<KakaoLinkResponse>() {
+                .sendDefault(context, mParams, new ResponseCallback<KakaoLinkResponse>() {
                     @Override
                     public void onFailure(ErrorResult errorResult) {
                         Logger.e(errorResult.toString());
@@ -63,50 +48,80 @@ public class KakaoLink {
 
                     }
                 });
-
     }
 
-//    public void send(Context context) {
-//        KakaoLinkService.getInstance()
-//                .sendDefault(context, mParams, new ResponseCallback<KakaoLinkResponse>() {
-//                    @Override
-//                    public void onFailure(ErrorResult errorResult) {
-//                        Logger.e(errorResult.toString());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(KakaoLinkResponse result) {
-//
-//                    }
-//                });
-//    }
+
+    public static class Builder {
 
 
-//    public static class Builder {
-//
-//
-//        public Builder(Context context) throws KakaoParameterException {
-//        }
-//
-//        public Builder addImage(String url, int width, int height) {
-//            return this;
-//        }
-//
-//        public Builder addText(String text) {
-//            return this;
-//        }
-//
-//        public Builder addWebLink(String text, String url) {
-//            return this;
-//        }
-//
-//        public Builder addAppButton(String text, String param) {
-//            return this;
-//        }
-//
-//        public KakaoLink build() {
-//            FeedTemplate params = null;
-//            return new KakaoLink(params);
-//        }
-//    }
+        private String mImageUrl;
+        private int mImageWidth;
+        private int mImageHeight;
+        private String mDescription;
+        private String mLinkUrl;
+        private String mWebButtonText;
+        private String mAppButtonText;
+
+        public Builder(Context context) {
+        }
+
+        public Builder addImage(String url, int width, int height) {
+            mImageUrl = url;
+            mImageWidth = width;
+            mImageHeight = height;
+            return this;
+        }
+
+        public Builder addText(String text) {
+            mDescription = text;
+            return this;
+        }
+
+        public Builder addWebLink(String text, String url) {
+            mWebButtonText = text;
+            mLinkUrl = url;
+            return this;
+        }
+
+        public Builder addAppButton(String text, String param) {
+            mAppButtonText = text;
+            //todo param에 들어갈 내용 채우기
+            return this;
+        }
+
+        public KakaoLink build() {
+            LinkObject linkObject =
+                    LinkObject.newBuilder()
+                            .setWebUrl(mLinkUrl)
+                            .setMobileWebUrl(mLinkUrl)
+                            .build();
+            ContentObject contentObject =
+                    ContentObject.newBuilder("Vingle", mImageUrl, linkObject)
+                            .setImageWidth(mImageWidth)
+                            .setImageHeight(mImageHeight)
+                            .setDescrption(mDescription)
+                            .build();
+            SocialObject socialObject = SocialObject.newBuilder()
+                    .setLikeCount(10)
+                    .setCommentCount(20)
+                    .setSharedCount(30)
+                    .setViewCount(40)
+                    .build();
+            LinkObject buttonLinkObject = LinkObject.newBuilder()
+                    .setWebUrl(mLinkUrl)
+                    .setMobileWebUrl(mLinkUrl)
+                    .build();
+
+            ButtonObject button1 = new ButtonObject(mWebButtonText, buttonLinkObject);
+            ButtonObject button2 = new ButtonObject(mAppButtonText, buttonLinkObject);
+            FeedTemplate params =
+                    FeedTemplate.newBuilder(contentObject)
+                            .setSocial(socialObject)
+                            .addButton(button1)
+                            .addButton(button2)
+                            .build();
+            return new KakaoLink(params);
+
+        }
+    }
 }
